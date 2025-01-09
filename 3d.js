@@ -102,11 +102,11 @@ async function load3dFile(container, file, fileType) {
 
 		cameraZ *= offset // zoom out a little so that objects don't fill the screen
 
-		if (container.id('cyborg')) {
+		if (container.id.includes('cyborg')) {
 			camera.position.z = cameraZ * 16
-		} else if (container.id('heart')) {
+		} else if (container.id.includes('heart')) {
 			camera.position.z = cameraZ * 40
-		} else if (container.id('reach')) {
+		} else if (container.id.includes('reach')) {
 			camera.position.z = cameraZ * (42 / cameraZ)
 		}
 
@@ -121,11 +121,11 @@ async function load3dFile(container, file, fileType) {
 			controls.target = center
 
 			// prevent camera from zooming out far enough to create far plane cutoff
-			if (container.id('cyborg')) {
+			if (container.id.includes('cyborg')) {
 				controls.maxDistance = cameraToFarEdge * 2
-			} else if (container.id('heart')) {
+			} else if (container.id.includes('heart')) {
 				controls.maxDistance = cameraToFarEdge * 2
-			} else if (container.id('reach')) {
+			} else if (container.id.includes('reach')) {
 				controls.maxDistance = cameraToFarEdge * 1.4
 			}
 
@@ -144,17 +144,17 @@ async function loadAllFiles() {
 	return await Promise.all([
 		load3dFile(
 			document.getElementById('cyborg'),
-			'https://drive.google.com/uc?export=download&id=1jRWgMZZ02mEeo02KTg4uaAZVbROS1AJY',
+			'https://ray-tao.s3.us-east-1.amazonaws.com/cyborg.stl',
 			'stl'
 		),
 		load3dFile(
 			document.getElementById('reach-drown'),
-			'https://drive.google.com/uc?export=download&id=1kwepGyZfNPun2pcZJzvLpfsNhg7iRmC6',
+			'https://ray-tao.s3.us-east-1.amazonaws.com/reachdrown.stl',
 			'stl'
 		),
 		load3dFile(
 			document.getElementById('synthetic-heart'),
-			'https://drive.google.com/uc?export=download&id=14wIJaYww0ezWCQJFwo8EQalKU2oHwGGC',
+			'https://ray-tao.s3.us-east-1.amazonaws.com/syntheticheart.obj',
 			'obj'
 		)
 	])
