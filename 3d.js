@@ -89,7 +89,7 @@ async function load3dFile(container, file, fileType) {
 
 		let center = new THREE.Vector3()
 		center = boundingBox.getCenter(center)
-		if (file.includes('reach')) {
+		if (container.id.includes('reach')) {
 			center.y = center.y - 6
 		}
 		let size = new THREE.Vector3()
@@ -102,11 +102,11 @@ async function load3dFile(container, file, fileType) {
 
 		cameraZ *= offset // zoom out a little so that objects don't fill the screen
 
-		if (file.includes('cyborg')) {
+		if (container.id('cyborg')) {
 			camera.position.z = cameraZ * 16
-		} else if (file.includes('heart')) {
+		} else if (container.id('heart')) {
 			camera.position.z = cameraZ * 40
-		} else if (file.includes('reach')) {
+		} else if (container.id('reach')) {
 			camera.position.z = cameraZ * (42 / cameraZ)
 		}
 
@@ -121,11 +121,11 @@ async function load3dFile(container, file, fileType) {
 			controls.target = center
 
 			// prevent camera from zooming out far enough to create far plane cutoff
-			if (file.includes('cyborg')) {
+			if (container.id('cyborg')) {
 				controls.maxDistance = cameraToFarEdge * 2
-			} else if (file.includes('heart')) {
+			} else if (container.id('heart')) {
 				controls.maxDistance = cameraToFarEdge * 2
-			} else if (file.includes('reach')) {
+			} else if (container.id('reach')) {
 				controls.maxDistance = cameraToFarEdge * 1.4
 			}
 
@@ -144,17 +144,17 @@ async function loadAllFiles() {
 	return await Promise.all([
 		load3dFile(
 			document.getElementById('cyborg'),
-			'./assets/projects/cyborg.stl',
+			'https://drive.google.com/uc?export=download&id=1jRWgMZZ02mEeo02KTg4uaAZVbROS1AJY',
 			'stl'
 		),
 		load3dFile(
 			document.getElementById('reach-drown'),
-			'./assets/projects/reachdrown.stl',
+			'https://drive.google.com/uc?export=download&id=1kwepGyZfNPun2pcZJzvLpfsNhg7iRmC6',
 			'stl'
 		),
 		load3dFile(
 			document.getElementById('synthetic-heart'),
-			'./assets/projects/syntheticheart.obj',
+			'https://drive.google.com/uc?export=download&id=14wIJaYww0ezWCQJFwo8EQalKU2oHwGGC',
 			'obj'
 		)
 	])
@@ -164,6 +164,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
 	document.getElementById('loading-screen').style.display = 'grid'
 	document.body.classList.add('disable-scrolling')
 	loadAllFiles().then(() => {
+		document.getElementById('loading-screen').style.opacity = 0
+		document.getElementById('loading-screen').style.visibility = 'hidden'
+		document.getElementById('loading-screen').style.position = 'absolute'
+		document.body.classList.remove('disable-scrolling')
+	}).catch((err) => {
+		console.error(err)
 		document.getElementById('loading-screen').style.opacity = 0
 		document.getElementById('loading-screen').style.visibility = 'hidden'
 		document.getElementById('loading-screen').style.position = 'absolute'
