@@ -4,6 +4,9 @@ import { STLLoader } from 'three/addons/loaders/STLLoader.js'
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js'
 
 async function load3dFile(container, file, fileType) {
+	container.querySelector('.loading').style.display = 'grid'
+	container.style.cursor = 'default'
+
 	const scene = new THREE.Scene()
 	scene.background = new THREE.Color().setHex(0xffffff)
 	const ambientLight = new THREE.AmbientLight(0xffffff, 0.5) // soft white light
@@ -44,6 +47,7 @@ async function load3dFile(container, file, fileType) {
 	})
 
 	const loader = fileType === 'stl' ? new STLLoader() : new OBJLoader()
+	const progressBar = container.querySelector('progress')
 	const loadFile = () =>
 		new Promise((res, rej) =>
 			loader.load(
@@ -60,7 +64,13 @@ async function load3dFile(container, file, fileType) {
 						res(geometry)
 					}
 				},
-				undefined,
+				(xhr) => {
+					if (progressBar) {
+						progressBar.value = (xhr.loaded / xhr.total) * 100
+						progressBar.innerText =
+							(xhr.loaded / xhr.total) * 100 + '%'
+					}
+				},
 				(error) => {
 					console.log(error)
 					rej(error)
@@ -135,9 +145,20 @@ async function load3dFile(container, file, fileType) {
 		}
 	}
 
+	function hideLoadingScreen(container) {
+		const loadingScreen = container.querySelector('.loading')
+		if (loadingScreen) {
+			loadingScreen.style.visibility = 'hidden'
+			loadingScreen.style.opacity = 0
+			loadingScreen.style.position = 'absolute'
+		}
+	}
+
 	const obj = await loadFile()
 	fitCameraToObject(camera, obj, 1, controls)
 	animate()
+	hideLoadingScreen(container)
+	container.style.cursor = 'move'
 }
 
 async function loadAllFiles() {
@@ -160,19 +181,8 @@ async function loadAllFiles() {
 	])
 }
 
-document.addEventListener('DOMContentLoaded', (event) => {
-	document.getElementById('loading-screen').style.display = 'grid'
-	document.body.classList.add('disable-scrolling')
-	loadAllFiles().then(() => {
-		document.getElementById('loading-screen').style.opacity = 0
-		document.getElementById('loading-screen').style.visibility = 'hidden'
-		document.getElementById('loading-screen').style.position = 'absolute'
-		document.body.classList.remove('disable-scrolling')
-	}).catch((err) => {
+document.addEventListener('DOMContentLoaded', () => {
+	loadAllFiles().catch((err) => {
 		console.error(err)
-		document.getElementById('loading-screen').style.opacity = 0
-		document.getElementById('loading-screen').style.visibility = 'hidden'
-		document.getElementById('loading-screen').style.position = 'absolute'
-		document.body.classList.remove('disable-scrolling')
 	})
 })
