@@ -8,8 +8,14 @@ body {
 	font-optical-sizing: auto;
 	font-style: normal;
 	background-image: url('./assets/background.jpeg');
+	background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
 	background-repeat: repeat-y;
 	background-size: contain;
+	margin: 0;
+    padding: 0;
 }
 
 main,
@@ -21,13 +27,14 @@ section {
 }
 
 main {
-	padding: 10.417vw;
+	padding: 10vw;
 	padding-top: 15px;
 	row-gap: 50px;
 }
 
 section {
 	row-gap: 0;
+	padding-top: 55px;
 }
 
 header {
@@ -209,24 +216,6 @@ h4 {
 
 #illustration .section-content {
 	max-width: 75%;
-}
-
-.other-section {
-	display: grid;
-	grid-template-columns: repeat(12, minmax(0, 1fr));
-	gap: 2.083dvw;
-}
-
-.other-section > * {
-	height: 100%;
-	grid-column: span 4 / span 4;
-}
-
-.other-section .span-half {
-	grid-column: span 6 / span 6;
-}
-.other-section .span-full {
-	grid-column: span 12 / span 12;
 }
 
 .contact-info {
